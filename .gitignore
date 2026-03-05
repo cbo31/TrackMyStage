@@ -1,0 +1,23 @@
+# Python / Django
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+*.log
+
+# Environment virtuel
+venv/
+
+# Node / React
+node_modules/
+dist/
+
+# Cache Vite
+.vite/
+
+# Environment variables
+.env
+
+# Editors 
+.vscode/
