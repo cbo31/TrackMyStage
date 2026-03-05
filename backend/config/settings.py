@@ -122,5 +122,5 @@ STATIC_URL = 'static/'
 
 # Allow acces to React to port 3000
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:5173",
 ]
