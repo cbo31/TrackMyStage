@@ -21,6 +21,7 @@ const theme = createTheme({
     text: {
       primary: "#1F2937",
       secondary: "#6B7280",
+      white: "#ffffff",
     },
 
     success: {
@@ -41,7 +42,7 @@ const theme = createTheme({
   },
 
   shape: {
-    borderRadius: 12,
+    borderRadius: 6,
   },
 
   typography: {
