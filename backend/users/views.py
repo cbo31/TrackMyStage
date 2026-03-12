@@ -37,7 +37,7 @@ def login(request):
 
         if check_password(password, user.password):
             return Response({
-                'message': 'Successfully loged',
+                'message': 'connexion réussie',
                 'user' : {
                     'id': user.id,
                     'email': user.email,
@@ -46,10 +46,10 @@ def login(request):
             }, status=status.HTTP_200_OK)
         else:
             return Response({
-                'error': 'Wrong email or password'
+                'error': 'email ou mot de passe incorrect'
             }, status=status.HTTP_401_UNAUTHORIZED)
     
     except CustomUser.DoesNotExist:
         return Response({
-            'error': 'user not found'
+            'error': 'utilisateur inconnu'
         }, status=status.HTTP_404_NOT_FOUND)
