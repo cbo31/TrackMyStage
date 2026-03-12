@@ -29,7 +29,7 @@ function Login({ onLoginSuccess }) {
         console.log(data.error);
         setMessage(data.error);
       }
-    } catch {
+    } catch { // error message if fetch does not work
       setMessage('probleme de connexion au serveur');
     }
   }
