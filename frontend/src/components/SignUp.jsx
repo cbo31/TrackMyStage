@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Button, TextField, Card, CardContent, CardActions, Typography } from '@mui/material'
 
 function SignUp() {
@@ -6,6 +6,19 @@ function SignUp() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(''), 1000);
+      return () => clearTimeout(timer);
+    }
+
+    if (message) {
+      const timer = setTimeout(() => setMessage(''), 1000);
+      return () => clearTimeout(timer);
+    }
+  })
 
   const handleSignup = async (e) => {
     e.preventDefault(); // disable refresh page by wrong submit
@@ -22,6 +35,7 @@ function SignUp() {
       const data = await res.json();
 
       if(res.ok) {
+        setSuccess(data.message);
         setEmail('');
         setName('');
         setPassword('');
@@ -62,6 +76,10 @@ function SignUp() {
             {message && <Typography variant="h6" sx={{ textTransform: "uppercase", fontSize: 16, 
               color: "error.main", textAlign: "center", whiteSpace: "pre-line"
             }}>{message}</Typography>}
+
+            {success && <Typography variant="h6" sx={{ textTransform: "uppercase", fontSize: 16, 
+              color: "success.main", textAlign: "center", whiteSpace: "pre-line"
+            }}>{success}</Typography>}
 
             <TextField type="email" label="EMAIL" size="small" value={email} 
               onChange={(e) => setEmail(e.target.value)}/>

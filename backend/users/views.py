@@ -17,7 +17,7 @@ def register(request):
     if serializer.is_valid():
         serializer.save()
         return Response({
-            "message": "User successfully created",
+            "message": "compte bien crée ! 🎉",
             "user": serializer.data
         }, status=status.HTTP_201_CREATED)
     
