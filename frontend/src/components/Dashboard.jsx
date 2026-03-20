@@ -1,10 +1,16 @@
+import { useState } from 'react';
 import { Box, Button, Card, Chip, CardContent, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import NewApplication from '/src/components/NewApplication.jsx';
 import data from '/src/data.js'
 
 function Dashboard() {
+  const [open, setOpen] = useState(false);
+
+  // function to open/close dialog 'nouvelle candidature' throught properties
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const statusConfig = {
-    // TODO : modify chip's color
     SENT: {label: "envoyée", color: "warning"},
     INTERVIEW: {label: "Entretien", color: "success"},
     REJECTED: {label: "Refusée", color: "error"},
@@ -48,8 +54,11 @@ function Dashboard() {
         justifyContent: 'space-between'
       }}>
         <Typography variant="h3" sx={{ color: "text.white" }}>Track My Stage</Typography>
-        <Button variant="contained" size="small">nouvelle candidature</Button>
+        <Button variant="contained" onClick={handleOpen} sx={{ alignSelf: 'center' }}>nouvelle candidature</Button>
+
+        <NewApplication open={open} onClose={handleClose} />
       </Box>
+  
       <Divider sx={{ m: 2 }}/>
 
       <Card
