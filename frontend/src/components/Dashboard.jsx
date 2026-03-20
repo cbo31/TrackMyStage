@@ -5,8 +5,8 @@ function Dashboard() {
 
   const statusConfig = {
     // TODO : modify chip's color
-    SENT: {label: "envoyée", color: "info"},
-    INTERVIEW: {label: "Entretien", color: "warning"},
+    SENT: {label: "envoyée", color: "warning"},
+    INTERVIEW: {label: "Entretien", color: "success"},
     REJECTED: {label: "Refusée", color: "error"},
     TO_APPLY: {label: "A postuler", color: "default"},
     NO_RESPONSE: {label: "Sans réponse", color: "secondary"},
@@ -43,7 +43,13 @@ function Dashboard() {
 
   return (
     <Box sx={{ width: 1000 }}>
-      <Typography variant="h3" sx={{ color: "text.white" }}>Track My Stage</Typography>
+      <Box sx= {{
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}>
+        <Typography variant="h3" sx={{ color: "text.white" }}>Track My Stage</Typography>
+        <Button variant="contained" size="small">nouvelle candidature</Button>
+      </Box>
       <Divider sx={{ m: 2 }}/>
 
       <Card
