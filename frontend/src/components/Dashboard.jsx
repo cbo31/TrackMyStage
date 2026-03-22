@@ -53,7 +53,7 @@ function Dashboard() {
         display: 'flex',
         justifyContent: 'space-between'
       }}>
-        <Typography variant="h3" sx={{ color: "text.white" }}>Track My Stage</Typography>
+        <Typography variant="h3" sx={{ color: "text.white" }}>Vos Candidatures</Typography>
         <Button variant="contained" onClick={handleOpen} sx={{ alignSelf: 'center' }}>nouvelle candidature</Button>
 
         <NewApplication open={open} onClose={handleClose} />
