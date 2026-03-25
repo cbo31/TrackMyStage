@@ -10,31 +10,39 @@ import { useState } from "react";
 // bug 'Ancestor with aria-hidden: <div#root aria-hidden="true">' on closing button
 
 function NewApplication({open, onClose}) {
+  //onClose is a function send from dashboard to close dialog
   const [date, setDate] = useState(dayjs());
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     'company': '',
     'town': '',
     'position': '',
     'date': date.format('YYYY-MM-DD'),
     'status': '',
     'note': '',
-  });
+  }
+
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleClose = () => {
+    onClose();
+    setFormData(initialFormData);
+  }
+
   const handleSubmit = () => {
     console.log("formData :", formData);
-
+    handleClose
   }
 
   return (
     <Dialog open={open} onClose={onClose} >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
         <DialogTitle sx={{ textTransform: "uppercase", m:0, p:2 }}>nouvelle candidature</DialogTitle>
-        <IconButton aria-label="close" onClick={onClose}>
+        <IconButton aria-label="close" onClick={handleClose}>
           <CloseIcon />
         </IconButton>
       </Box>
