@@ -64,7 +64,21 @@ Frontend (React) → API REST (Django) → Base de données
 
 ## 📸 Screenshots
 
-(en développemet)
+### Homepage
+<div align="center">
+    <img src="assets/dashboard.png" alt="Homepage" width=800/>
+</div>
+
+### Ajouter une candidature
+<div align="center">
+    <img src="assets/new_application.png" alt="Homepage" width=800/>
+</div>
+
+### Se connecter et s'inscrire
+<div align="center">
+    <img src="assets/login.png" alt="Homepage" width=800/>
+    <img src="assets/signup.png" alt="Homepage" width=800/>
+</div>
 
 ## 🔗 Installation
 
