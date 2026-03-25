@@ -4,11 +4,32 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import CloseIcon from '@mui/icons-material/Close';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/fr'
+import dayjs from "dayjs";
 import { useState } from "react";
 
 // bug 'Ancestor with aria-hidden: <div#root aria-hidden="true">' on closing button
 
 function NewApplication({open, onClose}) {
+  const [date, setDate] = useState(dayjs());
+
+  const [formData, setFormData] = useState({
+    'company': '',
+    'town': '',
+    'position': '',
+    'date': date.format('YYYY-MM-DD'),
+    'status': '',
+    'note': '',
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    console.log("formData :", formData);
+
+  }
+
   return (
     <Dialog open={open} onClose={onClose} >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
@@ -21,17 +42,27 @@ function NewApplication({open, onClose}) {
       <DialogContent>
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
-            <TextField type="text" name="company" label="Entreprise" size="small" />
-            <TextField type="text" name="town" label="Ville" size="small" />
+            <TextField type="text" name="company" label="Entreprise" size="small"
+              value={formData.company} onChange={handleChange} 
+            />
+            <TextField type="text" name="town" label="Ville" size="small" 
+              value={formData.town} onChange={handleChange} 
+            />
           </Stack>
           
-          <TextField type="text" name="position" label="Poste" size="small" />
+          <TextField type="text" name="position" label="Poste" size="small" 
+            value={formData.position} onChange={handleChange} 
+          />
 
           <Stack direction="row" spacing={2} alignItems="center">
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
               <DatePicker 
                 label="Quand ?"
-                slotProps={{ textField: { size: "small", fullWidth: true } }}/>
+                name="date"
+                slotProps={{ textField: { size: "small", fullWidth: true } }}
+                value={date}
+                onChange={(e) => setDate(e)}
+              />
             </LocalizationProvider>
           
             <FormControl fullWidth size="small">
@@ -40,6 +71,9 @@ function NewApplication({open, onClose}) {
                 labelId="status"
                 id="status-select"
                 label="Status"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
               >
                 <MenuItem value={`sent`}>Envoyée</MenuItem>
                 <MenuItem value={`to_apply`}>A envoyer</MenuItem>
@@ -47,11 +81,13 @@ function NewApplication({open, onClose}) {
             </FormControl>
           </Stack>
 
-          <TextField type="text" label="Notes" multiline rows={4} fullWidth/>
+          <TextField type="text" label="Notes" name="note" multiline rows={4} fullWidth
+            value={formData.note} onChange={handleChange} 
+          />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>ajouter</Button>
+        <Button onClick={handleSubmit}>ajouter</Button>
       </DialogActions>
     </Dialog>
   )
