@@ -124,3 +124,13 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
+
+# Acces token from SimpleJWT
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+# User Authentication
+AUTH_USER_MODEL = 'users.CustomUser' # MANDATORY when you create user model from 'AbstractUser' or 'AbstractBaseUser'
