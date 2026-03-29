@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Card, CardContent, CardActions, Typography } from '@mui/material'
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault(); // disable refresh page by wrong submit
@@ -21,17 +23,18 @@ function Login({ onLoginSuccess }) {
       const data = await res.json();
 
       if(res.ok) {
-        console.log(data.message)
-        console.log("user :", data.user);
-        onLoginSuccess = data.user;
-        setMessage('Working');
+        onLoginSuccess(data.user, data.access);
       } else {
         console.log(data.error);
         setMessage(data.error);
       }
     } catch { // error message if fetch does not work
       setMessage('probleme de connexion au serveur');
-    }
+    };
+  };
+
+  const handleSignUp = () => {
+    navigate("/signup");
   }
 
   return (
@@ -68,7 +71,7 @@ function Login({ onLoginSuccess }) {
 
           <CardActions sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <Button type="submit" variant="contained" size="medium" sx={{ width: 194 }}>se connecter</Button>
-            <Button size="small">S'inscrire</Button>
+            <Button size="small" onClick={handleSignUp}>S'inscrire</Button>
           </CardActions>
         </Card>
       </Box>

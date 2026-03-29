@@ -9,7 +9,9 @@ import { useState } from "react";
 
 // bug 'Ancestor with aria-hidden: <div#root aria-hidden="true">' on closing button
 
-function NewApplication({open, onClose}) {
+// TODO : add contact field
+
+function NewApplication({open, onClose, onSuccess}) {
   //onClose is a function send from dashboard to close dialog
   const [date, setDate] = useState(dayjs());
 
@@ -33,9 +35,23 @@ function NewApplication({open, onClose}) {
     setFormData(initialFormData);
   }
 
-  const handleSubmit = () => {
-    console.log("formData :", formData);
-    handleClose
+  const handleSubmit = async () => {
+    const token = localStorage.getItem('token');
+
+    const res = await fetch("http://127.0.0.1:8000/api/new_application/", {
+      method: 'POST',
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData),
+    });
+    
+    if(res.ok){
+      console.log("formData :", formData);
+      onSuccess();
+      handleClose();
+    }
   }
 
   return (
@@ -69,8 +85,11 @@ function NewApplication({open, onClose}) {
                 name="date"
                 slotProps={{ textField: { size: "small", fullWidth: true } }}
                 value={date}
-                onChange={(e) => setDate(e)}
-              />
+                onChange={(newDate) => {
+                  setDate(newDate)
+                  setFormData({...formData, date: newDate.format('YYYY-MM-DD')})
+                }}
+                />
             </LocalizationProvider>
           
             <FormControl fullWidth size="small">

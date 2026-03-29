@@ -1,28 +1,53 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Button, Card, Chip, CardContent, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import NewApplication from '/src/components/NewApplication.jsx';
-import data from '/src/data.js'
+import dayjs from 'dayjs'
 
-function Dashboard() {
+function Dashboard({ user }) {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
 
   // function to open/close dialog 'nouvelle candidature' throught properties
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const fetchApplication = async () => {
+    const token = localStorage.getItem('token'); // enable access to token
+
+    const res = await fetch("http://127.0.0.1:8000/api/applications", {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await res.json();
+
+    setData(data);
+  }
+
+  useEffect(() => {
+    fetchApplication()
+  }, []);
+
   const statusConfig = {
-    SENT: {label: "envoyée", color: "warning"},
-    INTERVIEW: {label: "Entretien", color: "success"},
-    REJECTED: {label: "Refusée", color: "error"},
-    TO_APPLY: {label: "A postuler", color: "default"},
-    NO_RESPONSE: {label: "Sans réponse", color: "secondary"},
+    sent: {label: "envoyée", color: "warning"},
+    interview: {label: "Entretien", color: "success"},
+    rejected: {label: "Refusée", color: "error"},
+    to_apply: {label: "A postuler", color: "default"},
+    no_response: {label: "Sans réponse", color: "secondary"},
   }
 
   const columns = [
     {label:"Entreprise", key:"company"},
     {label: "Poste", key:"position"},
     {label: "Contact", key:"contact"},
-    {label: "Date", key:"nextActionDate"},
+    {
+      label: "Date", 
+      key:"date",
+      render: (row) => dayjs(row.date).format('DD-MM-YYYY')
+    },
     {
       label: "Etat",
       key: "status",
@@ -56,7 +81,7 @@ function Dashboard() {
         <Typography variant="h3" sx={{ color: "text.white" }}>Vos Candidatures</Typography>
         <Button variant="contained" onClick={handleOpen} sx={{ alignSelf: 'center' }}>nouvelle candidature</Button>
 
-        <NewApplication open={open} onClose={handleClose} />
+        <NewApplication open={open} onClose={handleClose} onSuccess={fetchApplication} />
       </Box>
   
       <Divider sx={{ m: 2 }}/>
