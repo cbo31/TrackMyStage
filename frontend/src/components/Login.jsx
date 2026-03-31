@@ -25,7 +25,6 @@ function Login({ onLoginSuccess }) {
       if(res.ok) {
         onLoginSuccess(data.user, data.access);
       } else {
-        console.log(data.error);
         setMessage(data.error);
       }
     } catch { // error message if fetch does not work
@@ -65,7 +64,7 @@ function Login({ onLoginSuccess }) {
 
             <TextField type="email" label="EMAIL" size="small" value={email} 
               onChange={(e) => setEmail(e.target.value)}/>
-            <TextField type="password" label="PASSWORD" size="small" value={password}
+            <TextField type="password" label="MOT DE PASSE" size="small" value={password}
               onChange={(e) => setPassword(e.target.value)}/>
           </CardContent>
 

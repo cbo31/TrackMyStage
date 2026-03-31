@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 function Dashboard({ user }) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [message, setMessage] = useState('');
 
   // function to open/close dialog 'nouvelle candidature' throught properties
   const handleOpen = () => setOpen(true);
@@ -24,7 +25,11 @@ function Dashboard({ user }) {
 
     const data = await res.json();
 
-    setData(data);
+    if (data.message) {
+      setMessage('aucune candidature');
+    } else {
+      setData(data);
+    }
   }
 
   useEffect(() => {
@@ -78,7 +83,7 @@ function Dashboard({ user }) {
         display: 'flex',
         justifyContent: 'space-between'
       }}>
-        <Typography variant="h3" sx={{ color: "text.white" }}>Vos Candidatures</Typography>
+        <Typography variant="h3" sx={{ color: "text.white" }}>Vos Candidatures </Typography>
         <Button variant="contained" onClick={handleOpen} sx={{ alignSelf: 'center' }}>nouvelle candidature</Button>
 
         <NewApplication open={open} onClose={handleClose} onSuccess={fetchApplication} />
@@ -97,36 +102,38 @@ function Dashboard({ user }) {
         }}
       >
         <CardContent>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  {columns.map((col) => (
-                    !col.hideHeader && (
-                    <TableCell key={col.key} align="center" sx={{ fontSize: 18, textTransform: 'uppercase', fontWeight: 600 }}>
-                      {col.label}
-                    </TableCell>
-                  )
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((d) =>(
-                  <TableRow key={d.id}>
+          {message ? (
+            <Typography variant="h5" sx={{ color: 'primary.dark', fontWeight: 600, textTransform: 'uppercase' }}>{message}</Typography>
+          ) : (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
                     {columns.map((col) => (
-                      <TableCell key={col.key} align="center" sx={{ fontSize: 16 }}>
-                        {col.render ? col.render(d) : d[col.key]}
+                      !col.hideHeader && (
+                      <TableCell key={col.key} align="center" sx={{ fontSize: 18, textTransform: 'uppercase', fontWeight: 600 }}>
+                        {col.label}
                       </TableCell>
+                    )
                     ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {data.map((d) =>(
+                    <TableRow key={d.id}>
+                      {columns.map((col) => (
+                        <TableCell key={col.key} align="center" sx={{ fontSize: 16 }}>
+                          {col.render ? col.render(d) : d[col.key]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </CardContent>
       </Card>
-
-
     </Box>
   )
 };

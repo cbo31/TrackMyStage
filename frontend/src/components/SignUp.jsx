@@ -56,6 +56,10 @@ function SignUp() {
     }
   }
 
+  const handleSignin = () => {
+      navigate("/login");
+    }
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <Typography variant="h2" sx={{ color: "text.white", mb: 4 }}>Track My Stage</Typography>
@@ -88,14 +92,15 @@ function SignUp() {
 
             <TextField type="email" label="EMAIL" size="small" value={email} 
               onChange={(e) => setEmail(e.target.value)}/>
-            <TextField type="text" label="NAME" size="small" value={name} 
+            <TextField type="text" label="NOM" size="small" value={name} 
               onChange={(e) => setName(e.target.value)}/>
-            <TextField type="password" label="PASSWORD" size="small" value={password}
+            <TextField type="password" label="MOT DE PASSE" size="small" value={password}
               onChange={(e) => setPassword(e.target.value)}/>
           </CardContent>
 
-          <CardActions sx={{ display: "flex", flexDirection: "column", mb: 1 }}>
+          <CardActions sx={{ display: "flex", flexDirection: "column", mb: 1, gap: 1 }}>
             <Button type="submit" variant="contained" size="medium" sx={{ width: 194 }}>s'inscrire</Button>
+            <Button size="small" onClick={handleSignin}>se connecter</Button>
           </CardActions>
         </Card>
       </Box>
