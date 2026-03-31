@@ -1,8 +1,16 @@
 import { Box, AppBar, Toolbar, Button, Typography, Paper } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import Applications from '/src/components/Applications.jsx';
 
 
 function Dashboard() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };  
+
   return (
     <>
       <Box
@@ -21,7 +29,7 @@ function Dashboard() {
       <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
         TrackMyStage
       </Typography>
-      <Button variant='contained'>déconnexion</Button>
+      <Button variant='contained' onClick={handleLogout}>déconnexion</Button>
     </Box>
 
     <Applications />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Card, CardContent, CardActions, Typography } from '@mui/material'
 
 function SignUp() {
@@ -7,10 +8,14 @@ function SignUp() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (success) {
-      const timer = setTimeout(() => setSuccess(''), 1000);
+      const timer = setTimeout(() => {
+        setSuccess('')
+        navigate("/login")
+      }, 1000);
       return () => clearTimeout(timer);
     }
 
