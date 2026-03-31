@@ -72,7 +72,6 @@ def new_application(request):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) # mendatory token
@@ -85,3 +84,16 @@ def get_applications(request):
     serializer = ApplicationSerializer(applications, many=True) # many=True because it is a list
     return Response(serializer.data)
 
+
+# me view to get token and send user's informations
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def me(request):
+    user = request.user
+    return Response({
+        'user': {
+            'id': user.id,
+            'email': user.email,
+            'name': user.name
+        }
+    }, status=status.HTTP_200_OK)
