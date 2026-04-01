@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Applications from '/src/components/Applications.jsx';
 
 
-function Dashboard() {
+function Dashboard({ user }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -32,7 +32,7 @@ function Dashboard() {
       <Button variant='contained' onClick={handleLogout}>déconnexion</Button>
     </Box>
 
-    <Applications />
+    <Applications user={user}/>
     </>
   )
   

@@ -17,8 +17,9 @@ function NewApplication({open, onClose, onSuccess}) {
 
   const initialFormData = {
     'company': '',
-    'town': '',
+    'city': '',
     'position': '',
+    'contact': '',
     'date': date.format('YYYY-MM-DD'),
     'status': '',
     'note': '',
@@ -69,13 +70,17 @@ function NewApplication({open, onClose, onSuccess}) {
             <TextField type="text" name="company" label="Entreprise" size="small"
               value={formData.company} onChange={handleChange} 
             />
-            <TextField type="text" name="town" label="Ville" size="small" 
-              value={formData.town} onChange={handleChange} 
+            <TextField type="text" name="city" label="Ville" size="small" 
+              value={formData.city} onChange={handleChange} 
             />
           </Stack>
           
           <TextField type="text" name="position" label="Poste" size="small" 
             value={formData.position} onChange={handleChange} 
+          />
+
+          <TextField type="text" name="contact" label="Contact" size="small" 
+            value={formData.contact} onChange={handleChange} 
           />
 
           <Stack direction="row" spacing={2} alignItems="center">
