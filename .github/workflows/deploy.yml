@@ -1,0 +1,24 @@
+name: Deploy to VPS
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/${{ secrets.SSH_USER }}/workspaces/app
+            git pull origin deploy
+            docker compose down
+            docker compose up -d --build
+            sleep 10
+            docker compose exec backend python manage.py migrate
