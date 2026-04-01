@@ -3,7 +3,7 @@ import { Box, Button, Card, Chip, CardContent, Divider, Table, TableBody, TableC
 import NewApplication from '/src/components/NewApplication.jsx';
 import dayjs from 'dayjs'
 
-function Dashboard({ user }) {
+function Applications({ user }) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [message, setMessage] = useState('');
@@ -66,7 +66,7 @@ function Dashboard({ user }) {
         />
       )
     },
-    {label: "Ville", key:"town"},
+    {label: "Ville", key:"city"},
     { // add button beside backend data inside Table
       label: "Actions",
       key: "actions",
@@ -78,12 +78,12 @@ function Dashboard({ user }) {
   ];
 
   return (
-    <Box sx={{ width: 1000 }}>
+    <Box sx={{ width: 1000, py: 1 }}>
       <Box sx= {{
         display: 'flex',
         justifyContent: 'space-between'
       }}>
-        <Typography variant="h3" sx={{ color: "text.white" }}>Vos Candidatures </Typography>
+        <Typography variant="h4" sx={{ color: "text.white", fontWeight: 600 }}>Vos Candidatures {user.name} </Typography>
         <Button variant="contained" onClick={handleOpen} sx={{ alignSelf: 'center' }}>nouvelle candidature</Button>
 
         <NewApplication open={open} onClose={handleClose} onSuccess={fetchApplication} />
@@ -99,11 +99,12 @@ function Dashboard({ user }) {
           boxShadow: 16, 
           bgcolor: "#F9FAFB",  
           justifyContent: "center",
+          mb: 6,
         }}
       >
         <CardContent>
           {message ? (
-            <Typography variant="h5" sx={{ color: 'primary.dark', fontWeight: 600, textTransform: 'uppercase' }}>{message}</Typography>
+            <Typography variant="h5" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', py: 4 }}>{message}</Typography>
           ) : (
             <TableContainer>
               <Table>
@@ -138,4 +139,4 @@ function Dashboard({ user }) {
   )
 };
 
-export default Dashboard
+export default Applications

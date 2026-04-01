@@ -23,7 +23,7 @@ function AppContent() {
       .then(res => res.json())
       .then(data => {
         setUser(data.user)                        // reconnect user
-        navigate(`/${data.user.name}/dashboard`)  // navigate to user's dashboard
+        navigate(`/${data.user.name.replace(' ', '')}/dashboard`)  // navigate to user's dashboard
       })
       .catch(() => {
         localStorage.removeItem('token')          // remove invalid token
