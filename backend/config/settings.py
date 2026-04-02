@@ -128,6 +128,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Allow acces to React to port 3000
 CORS_ALLOWED_ORIGINS = [
+    'https://trackmystage.cbodev.fr'
     "http://localhost:5173",
 ]
 
