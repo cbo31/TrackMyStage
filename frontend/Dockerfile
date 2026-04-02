@@ -5,7 +5,7 @@ WORKDIR /TrackMyStage
 COPY package*.json ./
 RUN npm ci 
 COPY . .
-RUN nmp run build
+RUN npm run build
 
 # Stage 2 : Production
 FROM nginx:alpine
