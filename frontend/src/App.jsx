@@ -17,7 +17,7 @@ function AppContent() {
     const token = localStorage.getItem('token');
 
     if (token) {
-      fetch("http://127.0.0.1:8000/api/me/", {
+      fetch("/api/me/", {
         headers: { 'Authorization' : `Bearer ${token}`}
       })
       .then(res => res.json())
