@@ -12,6 +12,8 @@ function Login({ onLoginSuccess }) {
     e.preventDefault(); // disable refresh page by wrong submit
 
     try {
+      console.log('Tentative de connexion...', {email, password});
+
       const res = await fetch('/api/login/', {
         method: 'POST',
         headers: {
@@ -20,14 +22,20 @@ function Login({ onLoginSuccess }) {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log('Réponse reçue :', {statue: res.status, ok: res.ok});
+
       const data = await res.json();
+      console.log('Données parsées :', data);
 
       if(res.ok) {
+        console.log('✅ Connexion réussie');
         onLoginSuccess(data.user, data.access);
       } else {
+        console.log('❌ Erreur API:', data.error);
         setMessage(data.error);
       }
-    } catch { // error message if fetch does not work
+    } catch (error) { // error message if fetch does not work
+      console.error('💥 Exception:', error);
       setMessage('probleme de connexion au serveur');
     };
   };
