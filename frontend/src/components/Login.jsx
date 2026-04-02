@@ -8,7 +8,12 @@ function Login({ onLoginSuccess }) {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  console.log('🔴 Login.jsx est chargé !');
+  console.log('onLoginSuccess est:', onLoginSuccess);
+
+
   const handleLogin = async (e) => {
+    console.log('🟢 handleLogin called !');
     e.preventDefault(); // disable refresh page by wrong submit
 
     try {
