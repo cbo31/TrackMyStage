@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Card, Chip, CardContent, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import NewApplication from '/src/components/NewApplication.jsx';
+import Details from '/src/components/Details.jsx'
 import dayjs from 'dayjs'
 
 function Applications({ user }) {
   const [open, setOpen] = useState(false);
+  const [openDetails, setOpenDetails] = useState(false);
   const [data, setData] = useState([]);
   const [message, setMessage] = useState('');
+  const [selectedApplication, setSelectedApplication] = useState(null);
 
   // function to open/close dialog 'nouvelle candidature' throught properties
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // function to open/close dialog 'details' throught properties
+  const handleDetailsOpen = () => setOpenDetails(true);
+  const handleDetailsClose = () => setOpenDetails(false);
 
   const fetchApplication = async () => {
     const token = localStorage.getItem('token'); // enable access to token
@@ -72,7 +79,7 @@ function Applications({ user }) {
       key: "actions",
       hideHeader: true, // enable hide row "actions" in th
       render: (row) => (
-        <Button variant="contained" size="small"> details</Button>
+        <Button variant="contained" size="small" onClick={ () => { setSelectedApplication(row); handleDetailsOpen()}}> details</Button>
       )
     }
   ];
@@ -133,6 +140,8 @@ function Applications({ user }) {
               </Table>
             </TableContainer>
           )}
+
+          <Details open={openDetails} onClose={handleDetailsClose} onSuccess={fetchApplication} application={selectedApplication}/>
         </CardContent>
       </Card>
     </Box>
