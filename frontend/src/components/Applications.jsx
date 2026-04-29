@@ -140,8 +140,9 @@ function Applications({ user }) {
               </Table>
             </TableContainer>
           )}
-
-          <Details open={openDetails} onClose={handleDetailsClose} onSuccess={fetchApplication} application={selectedApplication}/>
+          {selectedApplication && (
+            <Details open={openDetails} onClose={handleDetailsClose} onSuccess={fetchApplication} application={selectedApplication}/>
+          )}
         </CardContent>
       </Card>
     </Box>

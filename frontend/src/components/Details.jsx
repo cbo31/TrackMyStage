@@ -5,29 +5,21 @@ import CloseIcon from '@mui/icons-material/Close';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/fr'
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // bug 'Ancestor with aria-hidden: <div#root aria-hidden="true">' on closing button
 
 // TODO : add contact field
 
-function NewApplication({open, onClose, onSuccess, application}) {
+function Details({open, onClose, onSuccess, application}) {
   //onClose is a function send from dashboard to close dialog
-  const [date, setDate] = useState(dayjs());
+  const [formData, setFormData] = useState(application);
 
-  console.log("Application :", application);
-
-  const initialFormData = {
-    'company': '',
-    'city': '',
-    'position': '',
-    'contact': '',
-    'date': date.format('YYYY-MM-DD'),
-    'status': '',
-    'note': '',
-  }
-
-  const [formData, setFormData] = useState(initialFormData);
+  useEffect( () => {
+    if (application) {
+      setFormData(application);
+    }
+  }, [application]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,14 +27,13 @@ function NewApplication({open, onClose, onSuccess, application}) {
 
   const handleClose = () => {
     onClose();
-    setFormData(initialFormData);
   }
 
   const handleSubmit = async () => {
     const token = localStorage.getItem('token');
 
-    const res = await fetch("http://127.0.0.1:8000/api/new_application/", {
-      method: 'POST',
+    const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/update/`, {
+      method: 'PATCH',
       headers: {
         'Authorization' : `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -51,7 +42,23 @@ function NewApplication({open, onClose, onSuccess, application}) {
     });
     
     if(res.ok){
-      console.log("formData :", formData);
+      onSuccess();
+      handleClose();
+    }
+  }
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem('token');
+
+    const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/delete/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    });
+    
+    if(res.ok){
       onSuccess();
       handleClose();
     }
@@ -86,18 +93,9 @@ function NewApplication({open, onClose, onSuccess, application}) {
           />
 
           <Stack direction="row" spacing={2} alignItems="center">
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-              <DatePicker 
-                label="Quand ?"
-                name="date"
-                slotProps={{ textField: { size: "small", fullWidth: true } }}
-                value={date}
-                onChange={(newDate) => {
-                  setDate(newDate)
-                  setFormData({...formData, date: newDate.format('YYYY-MM-DD')})
-                }}
-                />
-            </LocalizationProvider>
+            <TextField type="text" name="date" label="Date" size="small" 
+              value={formData.date} onChange={handleChange} 
+            />
           
             <FormControl fullWidth size="small">
               <InputLabel id="status">Status</InputLabel>
@@ -111,6 +109,9 @@ function NewApplication({open, onClose, onSuccess, application}) {
               >
                 <MenuItem value={`sent`}>Envoyée</MenuItem>
                 <MenuItem value={`to_apply`}>A envoyer</MenuItem>
+                <MenuItem value={`no_response`}>Sans réponse</MenuItem>
+                <MenuItem value={`interview`}>Entretien</MenuItem>
+                <MenuItem value={`rejected`}>Refusé</MenuItem>
               </Select>
             </FormControl>
           </Stack>
@@ -121,11 +122,12 @@ function NewApplication({open, onClose, onSuccess, application}) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSubmit}>ajouter</Button>
+        <Button onClick={handleDelete}>supprimer</Button>
+        <Button onClick={handleSubmit}>modifier</Button>
       </DialogActions>
     </Dialog>
   )
 
 }
 
-export default NewApplication
+export default Details
