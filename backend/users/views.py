@@ -56,7 +56,8 @@ def login(request):
         return Response({
             'error': 'utilisateur inconnu'
         }, status=status.HTTP_404_NOT_FOUND)
-    
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def new_application(request):
@@ -70,8 +71,7 @@ def new_application(request):
         }, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
+     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) # mendatory token
 def get_applications(request):
@@ -82,6 +82,34 @@ def get_applications(request):
     
     serializer = ApplicationSerializer(applications, many=True) # many=True because it is a list
     return Response(serializer.data)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_application(request, pk):
+    try:
+        application = Application.objects.get(pk=pk, user=request.user)
+    except Application.DoesNotExist:
+        return Response({'error': 'introuvable'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ApplicationSerializer(application, data=request.data, partial=True) #partial allow to do not send all Application data
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_application(request, pk):
+    try:
+        application = Application.objects.get(pk=pk, user=request.user)
+    except Application.DoesNotExist:
+        return Response({'error': 'introuvable'}, status=status.HTTP_404_NOT_FOUND)
+    
+    application.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 # me view to get token and send user's informations

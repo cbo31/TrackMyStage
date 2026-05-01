@@ -2,6 +2,8 @@
 
 Application web permettant de gérer et suivre ses candidatures de stage.
 
+Disponible ici : https://trackmystage.cbodev.fr/login
+
 ## 🚀 Contexte
 
 Ce projet a débuté comme une application frontend en React, avec pour objectif de découvrir la création d’interfaces dynamiques et la gestion d’état.
