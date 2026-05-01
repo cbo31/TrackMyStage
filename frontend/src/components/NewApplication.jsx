@@ -9,8 +9,6 @@ import { useState } from "react";
 
 // bug 'Ancestor with aria-hidden: <div#root aria-hidden="true">' on closing button
 
-// TODO : add contact field
-
 function NewApplication({open, onClose, onSuccess}) {
   //onClose is a function send from dashboard to close dialog
   const [date, setDate] = useState(dayjs());
