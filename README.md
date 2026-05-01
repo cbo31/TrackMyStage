@@ -1,6 +1,7 @@
 # TrackMyStage
 
 Application web permettant de gérer et suivre ses candidatures de stage.
+
 Disponible ici : https://trackmystage.cbodev.fr/login
 
 ## 🚀 Contexte
