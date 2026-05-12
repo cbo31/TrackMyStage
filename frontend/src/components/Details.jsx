@@ -1,19 +1,18 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, Typography, Button, DialogTitle, DialogActions, DialogContent, TextField, IconButton, Stack, Box, Divider } from "@mui/material";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import CloseIcon from '@mui/icons-material/Close';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/fr'
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-
-// bug 'Ancestor with aria-hidden: <div#root aria-hidden="true">' on closing button
-
-// TODO : add contact field
+import Notification from '/src/components/Notification.jsx';
 
 function Details({open, onClose, onSuccess, application}) {
   //onClose is a function send from dashboard to close dialog
   const [formData, setFormData] = useState(application);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [openNotification, setOpenNotification] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect( () => {
     if (application) {
@@ -29,42 +28,82 @@ function Details({open, onClose, onSuccess, application}) {
     onClose();
   }
 
+  const showError = (msg) => {
+    setErrorMessage(msg);
+    setOpenNotification(true);
+  }
+
   const handleSubmit = async () => {
     const token = localStorage.getItem('token');
 
-    const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/update/`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization' : `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData),
-    });
-    
-    if(res.ok){
-      onSuccess();
-      handleClose();
-    }
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/update/`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization' : `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          showError('Session Expiré, reconnectez-vous');
+          setTimeout(() => {
+            localStorage.removeItem('token');
+            navigate('/login');
+          }, 2000);
+        } else {
+          showError(`Erreur server : ${res.status}`);
+        }
+        return ;
+      }
+      
+      if(res.ok){
+        onSuccess();
+        handleClose();
+      }
+    } catch (error) {
+      showError('Impossible de joindre le serveur');
+    };
   }
 
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
 
-    const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/delete/`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization' : `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    });
-    
-    if(res.ok){
-      onSuccess();
-      handleClose();
-    }
-  }
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/delete/`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization' : `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          showError('Session Expiré, reconnectez-vous');
+          setTimeout(() => {
+            localStorage.removeItem('token');
+            navigate('/login');
+          }, 2000);
+        } else {
+          showError(`Erreur server : ${res.status}`);
+        }
+        return ;
+      }
+      
+      if(res.ok){
+        onSuccess();
+        handleClose();
+      }
+    } catch (error) {
+      showError('Impossible de joindre le serveur')
+    };
+  };
 
   return (
+    <Box>
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
 
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
@@ -139,6 +178,13 @@ function Details({open, onClose, onSuccess, application}) {
         <Button onClick={handleSubmit}>modifier</Button>
       </DialogActions>
     </Dialog>
+
+    <Notification 
+            message={errorMessage}
+            open={openNotification}
+            onClose={() => setOpenNotification(false)}
+    />
+    </Box>
   )
 
 }
