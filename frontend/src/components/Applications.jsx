@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Card, Chip, CardContent, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { useNavigate } from "react-router-dom";
+import { Box, Button, Card, Chip, CardContent, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Snackbar, Alert } from '@mui/material'
 import NewApplication from '/src/components/NewApplication.jsx';
 import Details from '/src/components/Details.jsx'
+import Notification from '/src/components/Notification.jsx';
 import dayjs from 'dayjs'
 
 function Applications({ user }) {
@@ -9,7 +11,12 @@ function Applications({ user }) {
   const [openDetails, setOpenDetails] = useState(false);
   const [data, setData] = useState([]);
   const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [openNotification, setOpenNotification] = useState(false);
+
+  const navigate = useNavigate();
 
   // function to open/close dialog 'nouvelle candidature' throught properties
   const handleOpen = () => setOpen(true);
@@ -19,25 +26,48 @@ function Applications({ user }) {
   const handleDetailsOpen = () => setOpenDetails(true);
   const handleDetailsClose = () => setOpenDetails(false);
 
+  // helper to display notification (error)
+  const showError = (msg) => {
+    setErrorMessage(msg);
+    setOpenNotification(true);
+  }
+
   const fetchApplication = async () => {
     const token = localStorage.getItem('token'); // enable access to token
 
-    const res = await fetch("/api/applications", {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/applications", {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!res.ok) {
+        if (res.status===401) {
+          showError('Session expirée, reconnectez-vous');
+          setTimeout(() => {
+            localStorage.removeItem('token');
+            navigate('/login');
+          }, 2000);
+        } else {
+          showError(`Erreur serveur : ${res.status}`);
+        }
+        return;
       }
-    });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (data.message) {
-      setMessage('aucune candidature');
-    } else {
-      setData(data);
+      if (data.message) {
+        setMessage('aucune candidature');
+      } else {
+        setData(data);
+      }
+    } catch (error) {
+      showError('Impossible de joindre le serveur');
     }
-  }
+  };
 
   useEffect(() => {
     fetchApplication()
@@ -145,6 +175,12 @@ function Applications({ user }) {
           )}
         </CardContent>
       </Card>
+
+      <Notification 
+        message={errorMessage}
+        open={openNotification}
+        onClose={() => setOpenNotification(false)}
+      />
     </Box>
   )
 };

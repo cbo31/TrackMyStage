@@ -45,7 +45,8 @@ function SignUp() {
         setName('');
         setPassword('');
       } else {
-        const errorMessages = Object.entries(data) // Modify data from object to list to get key/value in one field, ex : {"email": "test@test.fr"} => ["email : test@test.fr"]
+        // Modify data from object to list to get key/value in one field, ex : {"email": "test@test.fr"} => ["email : test@test.fr"]
+        const errorMessages = Object.entries(data) 
           .map(([field, errors]) => `${field} : ${errors.join(', ')}`)
           .join('\n');
         setMessage(`${errorMessages}`);
