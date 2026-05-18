@@ -35,7 +35,6 @@ function Dashboard({ user }) {
     <Applications user={user}/>
     </>
   )
-  
 };
 
 export default Dashboard
