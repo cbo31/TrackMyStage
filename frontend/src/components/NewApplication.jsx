@@ -5,13 +5,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/fr'
 import dayjs from "dayjs";
+import Notification from '/src/components/Notification.jsx';
 import { useState } from "react";
-
-// bug 'Ancestor with aria-hidden: <div#root aria-hidden="true">' on closing button
+import { useNavigate } from "react-router-dom";
 
 function NewApplication({open, onClose, onSuccess}) {
   //onClose is a function send from dashboard to close dialog
   const [date, setDate] = useState(dayjs());
+
+  // variables to display expire ession
+  const [openNotification, setOpenNotification] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const navigate = useNavigate();
+
+  const showError = (msg) => {
+    setErrorMessage(msg);
+    setOpenNotification(true);
+  }
 
   const initialFormData = {
     'company': '',
@@ -37,19 +48,36 @@ function NewApplication({open, onClose, onSuccess}) {
   const handleSubmit = async () => {
     const token = localStorage.getItem('token');
 
-    const res = await fetch("http://127.0.0.1:8000/api/new_application/", {
-      method: 'POST',
-      headers: {
-        'Authorization' : `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData),
-    });
-    
-    if(res.ok){
-      console.log("formData :", formData);
-      onSuccess();
-      handleClose();
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/new_application/", {
+        method: 'POST',
+        headers: {
+          'Authorization' : `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        if (res.status===401) {
+          showError('Session expirée, reconnectez-vous');
+          setTimeout(() => {
+            localStorage.removeItem('token');
+            navigate('/login');
+          }, 2000);
+        } else {
+          showError(`Erreur serveur : ${res.status}`);
+        }
+        return;
+      }
+      
+      if(res.ok){
+        console.log("formData :", formData);
+        onSuccess();
+        handleClose();
+      }
+    } catch (error) {
+      showError('Impossible de joindre le serveur');
     }
   }
 
@@ -119,9 +147,15 @@ function NewApplication({open, onClose, onSuccess}) {
       <DialogActions>
         <Button onClick={handleSubmit}>ajouter</Button>
       </DialogActions>
-    </Dialog>
-  )
 
+      <Notification 
+        message={errorMessage}
+        open={openNotification}
+        onClose={() => setOpenNotification(false)}
+      />
+    </Dialog>
+
+  )
 }
 
 export default NewApplication

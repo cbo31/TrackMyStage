@@ -123,8 +123,6 @@ function Applications({ user }) {
         <Typography variant="h4" sx={{ color: "text.white", fontWeight: 600 }}>Vos Candidatures {user.name} </Typography>
         <Button variant="contained" onClick={handleOpen} sx={{ alignSelf: 'center' }}>nouvelle candidature</Button>
 
-        <Button variant="contained" color="error" onClick={() => showError('Session expirée, reconnectez-vous')} sx={{ alignSelf: 'center' }}>TEST erreur</Button>
-
         <NewApplication open={open} onClose={handleClose} onSuccess={fetchApplication} />
       </Box>
   

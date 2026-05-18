@@ -9,6 +9,8 @@ import Notification from '/src/components/Notification.jsx';
 function Details({open, onClose, onSuccess, application}) {
   //onClose is a function send from dashboard to close dialog
   const [formData, setFormData] = useState(application);
+
+  // variables to display expire ession
   const [errorMessage, setErrorMessage] = useState('');
   const [openNotification, setOpenNotification] = useState(false);
 
@@ -104,89 +106,87 @@ function Details({open, onClose, onSuccess, application}) {
 
   return (
     <Box>
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
+      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
 
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
-        <DialogTitle sx={{ m:0, p:2 }}>Détails pour "{application.position.toUpperCase()}" chez "{application.company.toUpperCase()}"</DialogTitle>
-        <IconButton aria-label="close" onClick={handleClose}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
-      <DialogContent>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
+          <DialogTitle sx={{ m:0, p:2 }}>Détails pour "{application.position.toUpperCase()}" chez "{application.company.toUpperCase()}"</DialogTitle>
+          <IconButton aria-label="close" onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <DialogContent>
 
-        <Stack spacing={2}>
-          <TextField type="text" name="position" label="Poste" size="small" 
-            value={formData.position} onChange={handleChange}
-            slotProps={{
-              input: { sx: {fontSize: 20 }}
-            }}
-          />
-
-          <Divider />
-
-          <Box sx={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 2 }}>
-
-            <Stack spacing={2}>
-              <TextField type="text" name="company" label="Entreprise" size="small"
-                value={formData.company} onChange={handleChange} 
-              />
-              <TextField type="text" name="city" label="Ville" size="small" 
-                value={formData.city} onChange={handleChange} 
-              />
-              <TextField type="text" name="contact" label="Contact" size="small" 
-              value={formData.contact} onChange={handleChange} 
+          <Stack spacing={2}>
+            <TextField type="text" name="position" label="Poste" size="small" 
+              value={formData.position} onChange={handleChange}
+              slotProps={{
+                input: { sx: {fontSize: 20 }}
+              }}
             />
-            </Stack>
 
-            <Divider orientation="vertical" flexItem />
+            <Divider />
 
-            <Stack spacing={2}>
-              <TextField type="text" name="date" label="Date" size="small" 
-                value={formData.date} onChange={handleChange} 
+            <Box sx={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 2 }}>
+              <Stack spacing={2}>
+                <TextField type="text" name="company" label="Entreprise" size="small"
+                  value={formData.company} onChange={handleChange} 
+                />
+                <TextField type="text" name="city" label="Ville" size="small" 
+                  value={formData.city} onChange={handleChange} 
+                />
+                <TextField type="text" name="contact" label="Contact" size="small" 
+                value={formData.contact} onChange={handleChange} 
               />
-              <FormControl fullWidth size="small">
-                <InputLabel id="status">Status</InputLabel>
-                <Select
-                  labelId="status"
-                  id="status-select"
-                  label="Status"
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={`sent`}>Envoyée</MenuItem>
-                  <MenuItem value={`to_apply`}>A envoyer</MenuItem>
-                  <MenuItem value={`no_response`}>Sans réponse</MenuItem>
-                  <MenuItem value={`interview`}>Entretien</MenuItem>
-                  <MenuItem value={`rejected`}>Refusé</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
+              </Stack>
 
-          </Box>
+              <Divider orientation="vertical" flexItem />
 
-          <Divider />
+              <Stack spacing={2}>
+                <TextField type="text" name="date" label="Date" size="small" 
+                  value={formData.date} onChange={handleChange} 
+                />
+                
+                <FormControl fullWidth size="small">
+                  <InputLabel id="status">Status</InputLabel>
+                  <Select
+                    labelId="status"
+                    id="status-select"
+                    label="Status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={`sent`}>Envoyée</MenuItem>
+                    <MenuItem value={`to_apply`}>A envoyer</MenuItem>
+                    <MenuItem value={`no_response`}>Sans réponse</MenuItem>
+                    <MenuItem value={`interview`}>Entretien</MenuItem>
+                    <MenuItem value={`rejected`}>Refusé</MenuItem>
+                  </Select>
+                </FormControl>
+              </Stack>
+            </Box>
 
-          <TextField type="text" label="Notes" name="note" multiline rows={4} fullWidth
-            value={formData.note} onChange={handleChange} 
-          />
-        </Stack>
-      </DialogContent>
+            <Divider />
 
-      <DialogActions>
-        <Button onClick={handleDelete}>supprimer</Button>
-        <Button onClick={handleSubmit}>modifier</Button>
-      </DialogActions>
-    </Dialog>
+            <TextField type="text" label="Notes" name="note" multiline rows={4} fullWidth
+              value={formData.note} onChange={handleChange} 
+            />
+          </Stack>
+        </DialogContent>
 
-    <Notification 
-            message={errorMessage}
-            open={openNotification}
-            onClose={() => setOpenNotification(false)}
-    />
+        <DialogActions>
+          <Button onClick={handleDelete}>supprimer</Button>
+          <Button onClick={handleSubmit}>modifier</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Notification 
+        message={errorMessage}
+        open={openNotification}
+        onClose={() => setOpenNotification(false)}
+      />
     </Box>
   )
-
 }
 
 export default Details
