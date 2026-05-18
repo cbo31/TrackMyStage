@@ -39,7 +39,7 @@ function Details({open, onClose, onSuccess, application}) {
     const token = localStorage.getItem('token');
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/update/`, {
+      const res = await fetch(`/api/applications/${application.id}/update/`, {
         method: 'PATCH',
         headers: {
           'Authorization' : `Bearer ${token}`,
@@ -74,7 +74,7 @@ function Details({open, onClose, onSuccess, application}) {
     const token = localStorage.getItem('token');
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/applications/${application.id}/delete/`, {
+      const res = await fetch(`/api/applications/${application.id}/delete/`, {
         method: 'DELETE',
         headers: {
           'Authorization' : `Bearer ${token}`,

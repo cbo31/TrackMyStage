@@ -49,7 +49,7 @@ function NewApplication({open, onClose, onSuccess}) {
     const token = localStorage.getItem('token');
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/new_application/", {
+      const res = await fetch("/api/new_application/", {
         method: 'POST',
         headers: {
           'Authorization' : `Bearer ${token}`,
