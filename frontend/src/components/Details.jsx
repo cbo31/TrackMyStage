@@ -4,6 +4,9 @@ import { Dialog, Typography, Button, DialogTitle, DialogActions, DialogContent, 
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import 'dayjs/locale/fr'
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from "dayjs";
 import Notification from '/src/components/Notification.jsx';
 
 function Details({open, onClose, onSuccess, application}) {
@@ -142,9 +145,18 @@ function Details({open, onClose, onSuccess, application}) {
               <Divider orientation="vertical" flexItem />
 
               <Stack spacing={2}>
-                <TextField type="text" name="date" label="Date" size="small" 
-                  value={formData.date} onChange={handleChange} 
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+                  <DatePicker 
+                    label="Quand ?"
+                    name="date"
+                    slotProps={{ textField: { size: "small", fullWidth: true } }}
+                    value={formData.date ? dayjs(formData.date) : null}
+                    onChange={(newDate) => {
+                      setDate(newDate)
+                      setFormData({...formData, date: newDate.format('YYYY-MM-DD')})
+                    }}
+                  />
+                </LocalizationProvider>
                 
                 <FormControl fullWidth size="small">
                   <InputLabel id="status">Status</InputLabel>
