@@ -1,6 +1,6 @@
 name: trackmystage
 services:
-  trackmystage_db:
+  db:
     image: postgres:16-alpine
     container_name: trackmystage_db
     restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       retries: 5
       start_period: 10s
 
-  trackmystage_backend:
+  backend:
     build: ./backend
     container_name: trackmystage_backend
     restart: unless-stopped
@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     depends_on:
-      trackmystage_db:
+      db:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health/')\""]
@@ -33,7 +33,7 @@ services:
       retries: 5
       start_period: 20s
 
-  trackmystage_frontend:
+  frontend:
     build: ./frontend
     container_name: trackmystage_frontend
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
       - static_files:/usr/share/nginx/html/static
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
-      trackmystage_backend:
+      backend:
         condition: service_healthy
     healthcheck:
       # Port 80 only redirects to HTTPS; pidof is enough to know nginx is up
