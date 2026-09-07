@@ -1,5 +1,5 @@
 services:
-  db:
+  trackmystage_db:
     image: postgres:16-alpine
     container_name: trackmystage_db
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       retries: 5
       start_period: 10s
 
-  backend:
+  trackmystage_backend:
     build: ./backend
     container_name: trackmystage_backend
     restart: unless-stopped
@@ -32,7 +32,7 @@ services:
       retries: 5
       start_period: 20s
 
-  nginx:
+  trackmystage_nginx:
     build: ./frontend
     container_name: trackmystage_nginx
     restart: unless-stopped

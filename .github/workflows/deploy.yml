@@ -19,6 +19,5 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/workspaces/TrackMyStage
             git pull origin deploy
             docker compose down
-            docker compose up -d --build --no-cache
-            sleep 10
+            docker compose up -d --build
             docker compose exec trackmystage_backend python manage.py migrate
