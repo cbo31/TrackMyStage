@@ -124,3 +124,9 @@ def me(request):
             'name': user.name
         }
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def health(request):
+    """Simple liveness check for Docker and the frontend"""
+    return Response({"status": "ok"}, status=status.HTTP_200_OK)
