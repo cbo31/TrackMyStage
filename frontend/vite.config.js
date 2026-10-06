@@ -7,8 +7,16 @@ export default defineConfig({
     react(),
   ],
   server: {
+    // 0.0.0.0 = listen on all interfaces (needed to open from your host via the VM IP)
+    host: '0.0.0.0',
+    port: 5173,
+    // Allow http://vm:5173 (and any other hostname / IP you use in the browser)
+    allowedHosts: true,
     proxy: {
-      '/api': 'http://127.0.0.1:8000',
+      // In Docker Compose, API_PROXY_TARGET=http://backend:8000
+      // On your machine without Docker, it stays localhost
+      '/api': process.env.API_PROXY_TARGET || 'http://127.0.0.1:8000',
     },
   },
 })
+

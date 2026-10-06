@@ -127,11 +127,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Allow acces to React to port 3000
-CORS_ALLOWED_ORIGINS = [
-    'https://trackmystage.cbodev.fr',
-    "http://localhost:5173",
-]
+# In DEBUG (dev), allow any frontend origin (handy when you open via http://IP_VM:5173).
+# In production, keep an explicit allow-list.
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = [
+        'https://trackmystage.cbodev.fr',
+        'http://localhost:5173',
+    ]
+
 
 # Acces token from SimpleJWT
 REST_FRAMEWORK = {
