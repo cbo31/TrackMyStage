@@ -16,13 +16,15 @@ function Dashboard({ user }) {
       <Box
       sx={{
         width: "100%",
-        px: 3,                   // padding horizontal (3 * 8px = 24px)
+        px: { xs: 2, sm: 3},     // padding horizontal (3 * 8px = 24px)
         py: 2,                   // padding vertical
         boxShadow: "0px 3px 12px rgba(0,0,0,0.3)",
         borderRadius: 1,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: 1,
         mb: 5
       }}
     >

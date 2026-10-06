@@ -112,7 +112,7 @@ function Details({open, onClose, onSuccess, application}) {
       <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
 
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
-          <DialogTitle sx={{ m:0, p:2 }}>Détails pour "{application.position.toUpperCase()}" chez "{application.company.toUpperCase()}"</DialogTitle>
+          <DialogTitle sx={{ m:0, p:2, flex: 1, wordBreak: 'break-word' }}>Détails pour "{application.position.toUpperCase()}" chez "{application.company.toUpperCase()}"</DialogTitle>
           <IconButton aria-label="close" onClick={handleClose}>
             <CloseIcon />
           </IconButton>
@@ -129,7 +129,7 @@ function Details({open, onClose, onSuccess, application}) {
 
             <Divider />
 
-            <Box sx={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 2 }}>
+            <Box sx={{ display: "grid", gridTemplateColumns: {xs: '1fr', sm: '1fr auto 1fr'}, gap: 2 }}>
               <Stack spacing={2}>
                 <TextField type="text" name="company" label="Entreprise" size="small"
                   value={formData.company} onChange={handleChange} 
@@ -142,7 +142,7 @@ function Details({open, onClose, onSuccess, application}) {
               />
               </Stack>
 
-              <Divider orientation="vertical" flexItem />
+              <Divider orientation="vertical" flexItem sx={{ display: {xs: 'none', sm: 'block'} }} />
 
               <Stack spacing={2}>
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">

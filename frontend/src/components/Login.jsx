@@ -37,8 +37,10 @@ function Login({ onLoginSuccess }) {
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Typography variant="h2" sx={{ color: "text.white", mb: 4 }}>Track My Stage</Typography>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: 'center', 
+      minHeight: '100vh', px: 2 
+    }}>
+      <Typography variant="h2" sx={{ color: "text.white", mb: 4, textAlign: 'center' }}>Track My Stage</Typography>
 
       <Box component="form" onSubmit={handleLogin}>
         <Card 
@@ -48,7 +50,8 @@ function Login({ onLoginSuccess }) {
             flexDirection: "column", 
             boxShadow: 16, 
             bgcolor: "#F9FAFB", 
-            width: 400, 
+            width: { xs: '100%', sm: 400 },
+            maxWidth: '100%', 
             maxHeight: 410, 
             justifyContent: "center"
           }}
