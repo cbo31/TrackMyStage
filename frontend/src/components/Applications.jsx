@@ -36,7 +36,7 @@ function Applications({ user }) {
     const token = localStorage.getItem('token'); // enable access to token
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/applications", {
+      const res = await fetch("/api/applications", {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
