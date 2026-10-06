@@ -82,7 +82,7 @@ function NewApplication({open, onClose, onSuccess}) {
   }
 
   return (
-    <Dialog open={open} onClose={onClose} >
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
         <DialogTitle sx={{ textTransform: "uppercase", m:0, p:2 }}>nouvelle candidature</DialogTitle>
         <IconButton aria-label="close" onClick={handleClose}>
@@ -92,11 +92,11 @@ function NewApplication({open, onClose, onSuccess}) {
 
       <DialogContent>
         <Stack spacing={2}>
-          <Stack direction="row" spacing={2}>
-            <TextField type="text" name="company" label="Entreprise" size="small"
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField fullWidth type="text" name="company" label="Entreprise" size="small"
               value={formData.company} onChange={handleChange} 
             />
-            <TextField type="text" name="city" label="Ville" size="small" 
+            <TextField fullWidth type="text" name="city" label="Ville" size="small" 
               value={formData.city} onChange={handleChange} 
             />
           </Stack>
@@ -109,7 +109,7 @@ function NewApplication({open, onClose, onSuccess}) {
             value={formData.contact} onChange={handleChange} 
           />
 
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction={{ xs: 'column', sm: 'row'}} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
               <DatePicker 
                 label="Quand ?"

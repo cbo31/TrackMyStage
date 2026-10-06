@@ -115,10 +115,14 @@ function Applications({ user }) {
   ];
 
   return (
-    <Box sx={{ width: 1000, py: 1 }}>
+    <Box sx={{ width: '100%', maxWidth: 1000, px: 2, py: 1, mx: 'auto' }}>
       <Box sx= {{
         display: 'flex',
-        justifyContent: 'space-between'
+        flexWrap: 'wrap',
+        flexDirection: {xs: 'column', sm: 'row'},
+        alignItems: {xs: 'stretch', sm: 'center'},
+        justifyContent: 'space-between',
+        gap: 2
       }}>
         <Typography variant="h4" sx={{ color: "text.white", fontWeight: 600 }}>Vos Candidatures {user.name} </Typography>
         <Button variant="contained" onClick={handleOpen} sx={{ alignSelf: 'center' }}>nouvelle candidature</Button>
@@ -132,18 +136,19 @@ function Applications({ user }) {
         sx={{ 
           display: "flex", 
           alignItems: "center", 
-          flexDirection: "column", 
+          flexDirection: "column",
+          width: '100%', 
           boxShadow: 16, 
           bgcolor: "#F9FAFB",  
           justifyContent: "center",
           mb: 6,
         }}
       >
-        <CardContent>
+        <CardContent sx={{width: '100%'}}>
           {message ? (
             <Typography variant="h5" sx={{ color: 'text.secondary', fontWeight: 600, textTransform: 'uppercase', py: 4 }}>{message}</Typography>
           ) : (
-            <TableContainer>
+            <TableContainer sx={{ overflowX: 'auto', width: '100%' }}>
               <Table>
                 <TableHead>
                   <TableRow>
