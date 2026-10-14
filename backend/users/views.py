@@ -75,7 +75,8 @@ def new_application(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) # mendatory token
 def get_applications(request):
-    applications = Application.objects.filter(user=request.user).order_by('-date')
+    kind = request.query_params.get('kind', 'internship') # ?kind=job, internship by default
+    applications = Application.objects.filter(user=request.user, kind=kind).order_by('-date')
 
     if not applications.exists():
         return Response({'message': 'Aucune candidature'}, status=status.HTTP_200_OK)

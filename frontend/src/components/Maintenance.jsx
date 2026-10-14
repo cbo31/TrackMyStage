@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 
 function Maintenance({ onRetry }) {
   return (
@@ -9,20 +9,31 @@ function Maintenance({ onRetry }) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 2,
         px: 2,
-        textAlign: "center",
       }}
     >
-      <Typography variant="h4" color="primary">
-        Service temporairement indisponible
-      </Typography>
-      <Typography color="text.secondary">
-        TrackMyStage est en cours de redémarrage. Réessayez dans quelques instants.
-      </Typography>
-      <Button variant="contained" color="primary" onClick={onRetry}>
-        Réessayer
-      </Button>
+      <Card sx={{ width: "100%", maxWidth: 480 }}>
+        <CardContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+            p: 4,
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h5" color="primary" sx={{ fontWeight: 600 }}>
+            Service temporairement indisponible
+          </Typography>
+          <Typography color="text.secondary">
+            TrackMyStage est en cours de redémarrage. Réessayez dans quelques instants.
+          </Typography>
+          <Button variant="contained" color="primary" onClick={onRetry}>
+            Réessayer
+          </Button>
+        </CardContent>
+      </Card>
     </Box>
   );
 }

@@ -42,7 +42,7 @@ const theme = createTheme({
   },
 
   shape: {
-    borderRadius: 6,
+    borderRadius: 12,
   },
 
   typography: {
@@ -54,6 +54,41 @@ const theme = createTheme({
 
     body1: {
       fontSize: "16px",
+    },
+
+    // buttons keep the case we write, instead of MUI's default uppercase
+    button: {
+      textTransform: "none",
+      fontWeight: 600,
+    },
+  },
+
+  // default look of MUI components, defined once for the whole app
+  components: {
+    MuiButton: {
+      defaultProps: { disableElevation: true },
+    },
+
+    MuiCard: {
+      styleOverrides: {
+        root: { boxShadow: "0 10px 30px rgba(0,0,0,0.18)" },
+      },
+    },
+
+    MuiDialog: {
+      styleOverrides: {
+        paper: { borderRadius: 16 },
+      },
+    },
+
+    MuiTextField: {
+      defaultProps: { size: "small" },
+    },
+
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: { backgroundColor: "#1F2937", fontSize: 13, borderRadius: 8 },
+      },
     },
   },
 });

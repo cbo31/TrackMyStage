@@ -1,5 +1,5 @@
 import { Dialog, Typography, Button, DialogTitle, DialogActions, DialogContent, TextField, IconButton, Stack, Box } from "@mui/material";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import CloseIcon from '@mui/icons-material/Close';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,8 +9,9 @@ import Notification from '/src/components/Notification.jsx';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function NewApplication({open, onClose, onSuccess}) {
+function NewApplication({open, onClose, onSuccess, kind}) {
   //onClose is a function send from dashboard to close dialog
+  //kind is 'internship' or 'job' : salary fields are only displayed for a job
   const [date, setDate] = useState(dayjs());
 
   // variables to display expire ession
@@ -32,6 +33,9 @@ function NewApplication({open, onClose, onSuccess}) {
     'date': date.format('YYYY-MM-DD'),
     'status': '',
     'note': '',
+    'kind': kind,
+    'salary_expected': '',
+    'salary_negotiable': false,
   }
 
   const [formData, setFormData] = useState(initialFormData);
@@ -55,7 +59,11 @@ function NewApplication({open, onClose, onSuccess}) {
           'Authorization' : `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          // the API refuses "" for a number : an empty salary is sent as null
+          salary_expected: formData.salary_expected === '' ? null : formData.salary_expected,
+        }),
       });
 
       if (!res.ok) {
@@ -72,7 +80,6 @@ function NewApplication({open, onClose, onSuccess}) {
       }
       
       if(res.ok){
-        console.log("formData :", formData);
         onSuccess();
         handleClose();
       }
@@ -84,7 +91,7 @@ function NewApplication({open, onClose, onSuccess}) {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
-        <DialogTitle sx={{ textTransform: "uppercase", m:0, p:2 }}>nouvelle candidature</DialogTitle>
+        <DialogTitle sx={{ m:0, p:2 }}>Nouvelle candidature</DialogTitle>
         <IconButton aria-label="close" onClick={handleClose}>
           <CloseIcon />
         </IconButton>
@@ -124,28 +131,42 @@ function NewApplication({open, onClose, onSuccess}) {
             </LocalizationProvider>
           
             <FormControl fullWidth size="small">
-              <InputLabel id="status">Status</InputLabel>
+              <InputLabel id="status">Statut</InputLabel>
               <Select
                 labelId="status"
                 id="status-select"
-                label="Status"
+                label="Statut"
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
               >
                 <MenuItem value={`sent`}>Envoyée</MenuItem>
-                <MenuItem value={`to_apply`}>A envoyer</MenuItem>
+                <MenuItem value={`to_apply`}>À postuler</MenuItem>
               </Select>
             </FormControl>
           </Stack>
+
+          {kind === 'job' && (
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
+              <TextField fullWidth type="number" name="salary_expected" label="Salaire souhaité (€ brut/an)" size="small"
+                value={formData.salary_expected} onChange={handleChange}
+              />
+              {/* a checkbox gives its state in e.target.checked, not e.target.value */}
+              <FormControlLabel label="Négociable" control={
+                <Checkbox checked={formData.salary_negotiable}
+                  onChange={(e) => setFormData({ ...formData, salary_negotiable: e.target.checked })}
+                />
+              } />
+            </Stack>
+          )}
 
           <TextField type="text" label="Notes" name="note" multiline rows={4} fullWidth
             value={formData.note} onChange={handleChange} 
           />
         </Stack>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleSubmit}>ajouter</Button>
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button variant="contained" onClick={handleSubmit}>Ajouter</Button>
       </DialogActions>
 
       <Notification 

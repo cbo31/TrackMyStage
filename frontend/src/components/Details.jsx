@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, Typography, Button, DialogTitle, DialogActions, DialogContent, TextField, IconButton, Stack, Box, Divider } from "@mui/material";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import 'dayjs/locale/fr'
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -17,6 +17,9 @@ function Details({open, onClose, onSuccess, application}) {
   const [errorMessage, setErrorMessage] = useState('');
   const [openNotification, setOpenNotification] = useState(false);
 
+  // first click on 'supprimer' asks for a confirmation
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect( () => {
@@ -30,6 +33,7 @@ function Details({open, onClose, onSuccess, application}) {
   };
 
   const handleClose = () => {
+    setConfirmDelete(false);
     onClose();
   }
 
@@ -48,7 +52,11 @@ function Details({open, onClose, onSuccess, application}) {
           'Authorization' : `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          // the API refuses "" for a number : an empty salary is sent as null
+          salary_expected: formData.salary_expected === '' ? null : formData.salary_expected,
+        }),
       });
 
       if (!res.ok) {
@@ -109,7 +117,7 @@ function Details({open, onClose, onSuccess, application}) {
 
   return (
     <Box>
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth >
 
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pr: 1}}>
           <DialogTitle sx={{ m:0, p:2, flex: 1, wordBreak: 'break-word' }}>Détails pour "{application.position.toUpperCase()}" chez "{application.company.toUpperCase()}"</DialogTitle>
@@ -152,29 +160,42 @@ function Details({open, onClose, onSuccess, application}) {
                     slotProps={{ textField: { size: "small", fullWidth: true } }}
                     value={formData.date ? dayjs(formData.date) : null}
                     onChange={(newDate) => {
-                      setDate(newDate)
                       setFormData({...formData, date: newDate.format('YYYY-MM-DD')})
                     }}
                   />
                 </LocalizationProvider>
                 
                 <FormControl fullWidth size="small">
-                  <InputLabel id="status">Status</InputLabel>
+                  <InputLabel id="status">Statut</InputLabel>
                   <Select
                     labelId="status"
                     id="status-select"
-                    label="Status"
+                    label="Statut"
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
                   >
                     <MenuItem value={`sent`}>Envoyée</MenuItem>
-                    <MenuItem value={`to_apply`}>A envoyer</MenuItem>
+                    <MenuItem value={`to_apply`}>À postuler</MenuItem>
                     <MenuItem value={`no_response`}>Sans réponse</MenuItem>
                     <MenuItem value={`interview`}>Entretien</MenuItem>
-                    <MenuItem value={`rejected`}>Refusé</MenuItem>
+                    <MenuItem value={`rejected`}>Refusée</MenuItem>
                   </Select>
                 </FormControl>
+
+                {application.kind === 'job' && (
+                  <>
+                    {/* salary_expected is null when empty, a TextField needs '' */}
+                    <TextField type="number" name="salary_expected" label="Salaire souhaité (€ brut/an)" size="small"
+                      value={formData.salary_expected ?? ''} onChange={handleChange}
+                    />
+                    <FormControlLabel label="Négociable" control={
+                      <Checkbox checked={formData.salary_negotiable}
+                        onChange={(e) => setFormData({ ...formData, salary_negotiable: e.target.checked })}
+                      />
+                    } />
+                  </>
+                )}
               </Stack>
             </Box>
 
@@ -186,9 +207,19 @@ function Details({open, onClose, onSuccess, application}) {
           </Stack>
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={handleDelete}>supprimer</Button>
-          <Button onClick={handleSubmit}>modifier</Button>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          {confirmDelete ? (
+            <>
+              <Typography sx={{ mr: 'auto' }}>Supprimer définitivement ?</Typography>
+              <Button onClick={() => setConfirmDelete(false)}>Annuler</Button>
+              <Button variant="contained" color="error" onClick={handleDelete}>Confirmer</Button>
+            </>
+          ) : (
+            <>
+              <Button color="error" onClick={() => setConfirmDelete(true)} sx={{ mr: 'auto' }}>Supprimer</Button>
+              <Button variant="contained" onClick={handleSubmit}>Modifier</Button>
+            </>
+          )}
         </DialogActions>
       </Dialog>
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Card, CardContent, CardActions, Typography } from '@mui/material'
+import { Alert, Box, Button, TextField, Card, CardContent, Typography } from '@mui/material'
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
@@ -28,7 +28,7 @@ function Login({ onLoginSuccess }) {
         setMessage(data.error);
       }
     } catch (error) { // error message if fetch does not work
-      setMessage('probleme de connexion au serveur');
+      setMessage('Problème de connexion au serveur');
     };
   };
 
@@ -37,46 +37,33 @@ function Login({ onLoginSuccess }) {
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: 'center', 
-      minHeight: '100vh', px: 2 
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: 'center',
+      minHeight: '100vh', px: 2, py: 4
     }}>
-      <Typography variant="h2" sx={{ color: "text.white", mb: 4, textAlign: 'center' }}>Track My Stage</Typography>
+      <Typography variant="h3" sx={{ color: "text.white", mb: 1, textAlign: 'center' }}>TrackMyStage</Typography>
+      <Typography sx={{ color: "rgba(255,255,255,0.8)", mb: 4, textAlign: 'center' }}>
+        L'application pour garder un suivi de vos candidatures
+      </Typography>
 
-      <Box component="form" onSubmit={handleLogin}>
-        <Card 
-          sx={{ 
-            display: "flex", 
-            alignItems: "center", 
-            flexDirection: "column", 
-            boxShadow: 16, 
-            bgcolor: "#F9FAFB", 
-            width: { xs: '100%', sm: 400 },
-            maxWidth: '100%', 
-            maxHeight: 410, 
-            justifyContent: "center"
-          }}
+      <Card sx={{ width: '100%', maxWidth: 400 }}>
+        <CardContent
+          component="form"
+          onSubmit={handleLogin}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, p: { xs: 3, sm: 4 } }}
         >
-          <CardContent sx={{ display: "flex", alignItems: "center", flexDirection: "column", gap: 2 }}>
-            <Typography variant="h5" sx={{ mb: 2, textAlign: "center" }}>L'application pour garder un suivi de vos candidatures</Typography>
-            <Typography variant="h6" sx={{ textTransform: "uppercase", fontSize: 16, 
-              color: "text.secondary" 
-            }}>se connecter</Typography>
-            {message && <Typography variant="h6" sx={{ textTransform: "uppercase", fontSize: 16, 
-              color: "error.main"
-            }}>{message}</Typography>}
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>Se connecter</Typography>
 
-            <TextField type="email" label="EMAIL" size="small" value={email} 
-              onChange={(e) => setEmail(e.target.value)}/>
-            <TextField type="password" label="MOT DE PASSE" size="small" value={password}
-              onChange={(e) => setPassword(e.target.value)}/>
-          </CardContent>
+          {message && <Alert severity="error">{message}</Alert>}
 
-          <CardActions sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <Button type="submit" variant="contained" size="medium" sx={{ width: 194 }}>se connecter</Button>
-            <Button size="small" onClick={handleSignUp}>S'inscrire</Button>
-          </CardActions>
-        </Card>
-      </Box>
+          <TextField fullWidth type="email" label="Email" value={email}
+            onChange={(e) => setEmail(e.target.value)}/>
+          <TextField fullWidth type="password" label="Mot de passe" value={password}
+            onChange={(e) => setPassword(e.target.value)}/>
+
+          <Button fullWidth type="submit" variant="contained" size="large">Se connecter</Button>
+          <Button fullWidth onClick={handleSignUp}>Pas encore de compte ? S'inscrire</Button>
+        </CardContent>
+      </Card>
     </Box>
   )
 }
