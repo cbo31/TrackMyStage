@@ -15,7 +15,12 @@ class Application(models.Model):
         ('interview', 'Entretien'),
         ('rejected', 'Refusé'),
     ]
+    KIND_CHOICES = [
+        ('internship', 'Stage'),
+        ('job', 'Emploi'),
+    ]
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="applications")
+    kind = models.CharField(max_length=20, choices=KIND_CHOICES, default='internship')
     company = models.CharField(max_length=100)
     city = models.CharField(max_length=100, blank=True)
     position = models.CharField(max_length=100)
@@ -23,6 +28,9 @@ class Application(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to_apply')
     contact = models.CharField(max_length=100, blank=True)
     note = models.CharField(max_length=400, blank=True)
+    # job only fields
+    salary_expected = models.PositiveIntegerField(null=True, blank=True)
+    salary_negotiable = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.company} - {self.position}"

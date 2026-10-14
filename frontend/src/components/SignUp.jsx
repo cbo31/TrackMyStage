@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Card, CardContent, CardActions, Typography } from '@mui/material'
+import { Alert, Box, Button, TextField, Card, CardContent, Typography } from '@mui/material'
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -18,15 +18,11 @@ function SignUp() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-
-    if (message) {
-      const timer = setTimeout(() => setMessage(''), 1000);
-      return () => clearTimeout(timer);
-    }
   })
 
   const handleSignup = async (e) => {
     e.preventDefault(); // disable refresh page by wrong submit
+    setMessage('');
 
     try {
       const res = await fetch('/api/register/', {
@@ -46,7 +42,7 @@ function SignUp() {
         setPassword('');
       } else {
         // Modify data from object to list to get key/value in one field, ex : {"email": "test@test.fr"} => ["email : test@test.fr"]
-        const errorMessages = Object.entries(data) 
+        const errorMessages = Object.entries(data)
           .map(([field, errors]) => `${field} : ${errors.join(', ')}`)
           .join('\n');
         setMessage(`${errorMessages}`);
@@ -63,52 +59,35 @@ function SignUp() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: 'center',
-      minHeight: '100vh', px: 2
+      minHeight: '100vh', px: 2, py: 4
     }}>
-      <Typography variant="h2" sx={{ color: "text.white", mb: 4, textAlign: 'center' }}>Track My Stage</Typography>
+      <Typography variant="h3" sx={{ color: "text.white", mb: 1, textAlign: 'center' }}>TrackMyStage</Typography>
+      <Typography sx={{ color: "rgba(255,255,255,0.8)", mb: 4, textAlign: 'center' }}>
+        L'application pour garder un suivi de vos candidatures
+      </Typography>
 
-      <Box component="form" onSubmit={handleSignup}>
-        <Card 
-          sx={{ 
-            display: "flex", 
-            alignItems: "center", 
-            flexDirection: "column", 
-            boxShadow: 16, 
-            bgcolor: "#F9FAFB", 
-            width: { xs: '100%', sm: 400 },
-            maxWidth: '100%', 
-            minWidth: 398,
-            maxHeight: 465, 
-            justifyContent: "center"
-          }}
+      <Card sx={{ width: '100%', maxWidth: 400 }}>
+        <CardContent
+          component="form"
+          onSubmit={handleSignup}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, p: { xs: 3, sm: 4 } }}
         >
-          <CardContent sx={{ display: "flex", alignItems: "center", flexDirection: "column", gap: 2 }}>
-            <Typography variant="h5" sx={{ mb: 2, textAlign: "center" }}>Créer son compte</Typography>
-            <Typography variant="h6" sx={{ textTransform: "uppercase", fontSize: 16, 
-              color: "text.secondary" 
-            }}>s'inscrire</Typography>
-            {message && <Typography variant="h6" sx={{ textTransform: "uppercase", fontSize: 16, 
-              color: "error.main", textAlign: "center", whiteSpace: "pre-line"
-            }}>{message}</Typography>}
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>Créer son compte</Typography>
 
-            {success && <Typography variant="h6" sx={{ textTransform: "uppercase", fontSize: 16, 
-              color: "success.main", textAlign: "center", whiteSpace: "pre-line"
-            }}>{success}</Typography>}
+          {message && <Alert severity="error" sx={{ whiteSpace: "pre-line" }}>{message}</Alert>}
+          {success && <Alert severity="success">{success}</Alert>}
 
-            <TextField type="email" label="EMAIL" size="small" value={email} 
-              onChange={(e) => setEmail(e.target.value)}/>
-            <TextField type="text" label="NOM" size="small" value={name} 
-              onChange={(e) => setName(e.target.value)}/>
-            <TextField type="password" label="MOT DE PASSE" size="small" value={password}
-              onChange={(e) => setPassword(e.target.value)}/>
-          </CardContent>
+          <TextField fullWidth type="email" label="Email" value={email}
+            onChange={(e) => setEmail(e.target.value)}/>
+          <TextField fullWidth type="text" label="Nom" value={name}
+            onChange={(e) => setName(e.target.value)}/>
+          <TextField fullWidth type="password" label="Mot de passe" value={password}
+            onChange={(e) => setPassword(e.target.value)}/>
 
-          <CardActions sx={{ display: "flex", flexDirection: "column", mb: 1, gap: 1 }}>
-            <Button type="submit" variant="contained" size="medium" sx={{ width: 194 }}>s'inscrire</Button>
-            <Button size="small" onClick={handleSignin}>se connecter</Button>
-          </CardActions>
-        </Card>
-      </Box>
+          <Button fullWidth type="submit" variant="contained" size="large">S'inscrire</Button>
+          <Button fullWidth onClick={handleSignin}>Déjà un compte ? Se connecter</Button>
+        </CardContent>
+      </Card>
     </Box>
   )
 }

@@ -11,7 +11,7 @@ function Notification({ message, open, onClose, severity = "error"}) {
       open={open}
       autoHideDuration={4000}
       onClose={handleClose}
-      anchorOrigin={{ vertical: 'center', horizontal: 'center'}}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
     >
       <Alert onClose={handleClose} severity={severity} variant="filled">
         {message}
