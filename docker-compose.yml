@@ -45,6 +45,7 @@ services:
       - ./nginx/maintenance.html:/usr/share/nginx/html/maintenance.html:ro
       - static_files:/usr/share/nginx/html/static
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
     depends_on:
       backend:
         condition: service_healthy
